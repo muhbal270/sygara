@@ -18,9 +18,12 @@ import TemplateIndex from '../pages/admin/template/TemplateIndex';
 import TemplateCreate from '../pages/admin/template/TemplateCreate';
 import TemplateEdit from '../pages/admin/template/TemplateEdit';
 
+import { Toaster } from 'react-hot-toast';
+
 function Router() {
   return (
     <>
+      <Toaster />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
