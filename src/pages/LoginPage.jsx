@@ -42,7 +42,14 @@ const LoginPage = () => {
                 });
 
                 // redirect ke halaman utama
-                navigate('/');
+                // navigate('/');
+
+                // cek role dan arahkan sesuai role
+                if (response.data.user.role == 1 ) {
+                    navigate('/admin/dashboard'); // admin
+                } else {
+                    navigate('/'); // customer
+                }
 
             })
             .catch((error) => {

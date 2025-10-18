@@ -34,7 +34,7 @@ const NavbarComponent = () => {
             },
             withCredentials: true
         })
- 
+
         .then((response) => {
             // console.log(response);
             // hapus token & data user dari cookies

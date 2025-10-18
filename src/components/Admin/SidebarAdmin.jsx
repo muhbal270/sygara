@@ -8,14 +8,14 @@ const SidebarAdmin = () => {
     const [collapsed, setCollapsed] = useState(false);
 
     const navItems = [
-        { name: "Template", icon: faCopy, path: "/admin/template" },
+        // { name: "Template", icon: faCopy, path: "/admin/template" },
         { name: "Dashboard", icon: faHome, path: "/admin/dashboard" },
-        { name: "Bank", icon: faLandmark, path: "/admin/bank" },
-        { name: "Banner", icon: faRectangleAd, path: "/admin/banner" },
-        { name: "Courier", icon: faTruck, path: "/admin/courier" },
+        // { name: "Bank", icon: faLandmark, path: "/admin/bank" },
+        // { name: "Banner", icon: faRectangleAd, path: "/admin/banner" },
+        // { name: "Courier", icon: faTruck, path: "/admin/courier" },
         { name: "Order", icon: faClipboardList, path: "/admin/order" },
         { name: "Product", icon: faBox, path: "/admin/product" },
-        { name: "User", icon: faUsers, path: "/admin/user" },
+        // { name: "User", icon: faUsers, path: "/admin/user" },
     ];
 
     return (

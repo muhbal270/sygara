@@ -19,6 +19,11 @@ import TemplateCreate from '../pages/admin/template/TemplateCreate';
 import TemplateEdit from '../pages/admin/template/TemplateEdit';
 
 import { Toaster } from 'react-hot-toast';
+import PrivateAdminRoutes from './PrivateAdminRoutes';
+import PrivateCustomerRoutes from './PrivateCustomerRoutes';
+import IndexProduct from '../pages/admin/product/IndexProduct';
+import CreateProduct from '../pages/admin/product/CreateProduct';
+import EditProduct from '../pages/admin/product/EditProduct';
 
 function Router() {
   return (
@@ -31,14 +36,56 @@ function Router() {
         {/* customer routes */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/product" element={<ProductPage />} />
-        <Route path="/cart" element={<CartPage />} />
-        <Route path="/order" element={<OrderPage />} />
-        <Route path="/payment" element={<PaymentPage />} />
-        <Route path="/success" element={<SuccessPage />} />
-        <Route path="/history" element={<HistoryPage />} />
+        <Route path="/cart" element={
+          <PrivateCustomerRoutes>
+            <CartPage />
+          </PrivateCustomerRoutes>
+        } />
+        <Route path="/order" element={
+          <PrivateCustomerRoutes>
+            <OrderPage />
+          </PrivateCustomerRoutes>
+        } />
+        <Route path="/payment" element={
+          <PrivateCustomerRoutes>
+            <PaymentPage />
+          </PrivateCustomerRoutes>
+        } />
+        <Route path="/success" element={
+          <PrivateCustomerRoutes>
+            <SuccessPage />
+          </PrivateCustomerRoutes>
+        } />
+        <Route path="/history" element={
+          <PrivateCustomerRoutes>
+            <HistoryPage />
+          </PrivateCustomerRoutes>
+        } />
 
         {/* admin routes */}
-        <Route path="/admin/dashboard" element={<Dashboard />} />
+        <Route path="/admin/dashboard" element={
+          <PrivateAdminRoutes>
+            <Dashboard />
+          </PrivateAdminRoutes>
+        } />
+
+        <Route path="/admin/product" element={
+          <PrivateAdminRoutes>
+            <IndexProduct />
+          </PrivateAdminRoutes>
+        } />
+
+        <Route path="/admin/product/create" element={
+          <PrivateAdminRoutes>
+            <CreateProduct />
+          </PrivateAdminRoutes>
+        } />
+
+        <Route path="/admin/product/edit/:id" element={
+          <PrivateAdminRoutes>
+            <EditProduct />
+          </PrivateAdminRoutes>
+        } />
 
         {/* template route */}
         <Route path="/admin/template" element={<TemplateIndex />} />

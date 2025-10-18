@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import NavbarComponent from '../../components/Customer/NavbarComponent';
 import FooterComponent from '../../components/Customer/FooterComponent';
 import Swal from 'sweetalert2';
@@ -9,6 +9,7 @@ import imgPisang from '../../assets/img-pisang.png';
 import imgJeruk from '../../assets/img-jeruk.png';
 import imgApel from '../../assets/img-apel.png';
 import imgSemangka from '../../assets/img-semangka.png';
+import Api from '../../api/Api';
 
 const ProductPage = () => {
 
@@ -58,12 +59,23 @@ const ProductPage = () => {
     
 
     // data product
-    const products = [
-        {title: 'Pisang Cavendish', price: 'Rp 15.000/kg', img: imgPisang},
-        {title: 'Jeruk Sunkist', price: 'Rp 10.000/kg', img: imgJeruk},
-        {title: 'Apel Fuji', price: 'Rp 25.000/kg', img: imgApel},
-        {title: 'Semangka', price: 'Rp 15.000/kg', img: imgSemangka},
-    ];
+    const [products, setProducts] = useState([]);
+
+    const getDataProduct = async () => {
+        await Api.get('/product')
+            .then((response) => {
+                setProducts(response.data);
+                // console.log(response.data);
+            }) .catch((error) => {
+                console.error("Error fetching products:", error);
+            }
+        );
+    };
+
+    useEffect(() => {
+        getDataProduct();
+    }, []);
+
 
     return (
         <>
@@ -98,8 +110,8 @@ const ProductPage = () => {
                                 <Card className='text-center rounded-5' onClick={() => handleCardClick(product)}>
                                     <Card.Img variant='top' src={product.img} />
                                     <Card.Body>
-                                        <Card.Title>{product.title}</Card.Title>
-                                        <Card.Text>{product.price}</Card.Text>
+                                        <Card.Title>{product.nama_product}</Card.Title>
+                                        <Card.Text>Rp {product.harga}</Card.Text>
                                     </Card.Body>
                                 </Card>
                             </Col>
@@ -117,15 +129,41 @@ const ProductPage = () => {
                 </Modal.Header>
 
                 <Modal.Body>
-                        <div className="product-image d-flex justify-content-center">
-                            <img src={selectedProduct?.img} alt={selectedProduct?.title} className='img-fluid' />
-                        </div>
-                        <div className="product-description">
-                            <h6>Deskripsi</h6>
-                            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit.</p>
-                            <h6>Harga</h6>
-                            <h5 className="text-success">{selectedProduct?.price}</h5>
-                        </div>
+                    {selectedProduct ? (
+                        <>
+                            <div className="product-image d-flex justify-content-center mb-3">
+                                <img
+                                    src={
+                                        selectedProduct.img.startsWith("http")
+                                            ? selectedProduct.img
+                                            : `${import.meta.env.VITE_API_URL}/storage/product/${selectedProduct.img}`
+                                    }
+                                    alt={selectedProduct.nama_product}
+                                    className="img-fluid rounded"
+                                    style={{ maxHeight: "250px", objectFit: "cover" }}
+                                />
+                            </div>
+
+                            <div className="product-description">
+                                <h6>Deskripsi</h6>
+                                <p>
+                                    {selectedProduct.deskripsi
+                                        ? selectedProduct.deskripsi
+                                        : "Tidak ada deskripsi untuk produk ini."}
+                                </p>
+
+                                <h6>Harga</h6>
+                                <h5 className="text-success">
+                                    Rp {Number(selectedProduct.harga).toLocaleString("id-ID")}
+                                </h5>
+
+                                <h6 className="mt-3">Stok</h6>
+                                <p>{selectedProduct.stok}</p>
+                            </div>
+                        </>
+                    ) : (
+                        <p className="text-center text-muted">Memuat data produk...</p>
+                    )}
                 </Modal.Body>
 
                 <Modal.Footer className='d-flex justify-content-between'>
