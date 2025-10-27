@@ -34,6 +34,7 @@ const LoginPage = () => {
                 Cookies.set('name', response.data.user.name);
                 Cookies.set('role', response.data.user.role);
                 Cookies.set('nomor_telepon', response.data.user.nomor_telepon);
+                Cookies.set('user_id', response.data.user.id);
 
                 // Tampilkan notifikasi sukses
                 toast.success('Berhasil masuk, terimakasih! 👌', {

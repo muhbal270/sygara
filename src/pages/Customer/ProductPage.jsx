@@ -10,6 +10,7 @@ import imgJeruk from '../../assets/img-jeruk.png';
 import imgApel from '../../assets/img-apel.png';
 import imgSemangka from '../../assets/img-semangka.png';
 import Api from '../../api/Api';
+import Cookies from 'js-cookie'
 
 const ProductPage = () => {
 
@@ -32,31 +33,56 @@ const ProductPage = () => {
         setJumlah(e.target.value);
     }
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-        Swal.fire({
-            title: 'Berhasil ditambah ke Keranjang!',
-            icon: 'success',
-            confirmButtonText: 'Cek Keranjang',
-            confirmButtonColor: '#198754',
-            showCancelButton: true,
-            cancelButtonText: 'Lanjut Belanja',
-            customClass: {
-                confirmButton: 'rounded-pill',
-                cancelButton: 'rounded-pill'
+        const token = Cookies.get('token');
+
+        // jika belum login arahkan ke halaman login
+        if (!token) {
+            Swal.fire('Gagal, Silahkan login terlebih dahulu.')
+            return;
+        }
+
+        try {
+            const payload = {
+                product_id: selectedProduct.id,
+                quantity: jumlah
             }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = '/cart';
-            } else {
-                handleCloseModal();
-            }
-        });
+
+            await Api.post('/keranjang', payload, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            Swal.fire({
+                title: 'Berhasil ditambah ke Keranjang!',
+                icon: 'success',
+                confirmButtonText: 'Cek Keranjang',
+                confirmButtonColor: '#198754',
+                showCancelButton: true,
+                cancelButtonText: 'Lanjut Belanja',
+                customClass: {
+                    confirmButton: 'rounded-pill',
+                    cancelButton: 'rounded-pill'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/cart';
+                } else {
+                    handleCloseModal();
+                }
+            });
+        } catch (error) {
+            console.error("Error adding to cart:", error);
+            Swal.fire('Gagal menambahkan ke keranjang. Silahkan coba lagi.');
+        }
+
     }
 
 
-    
+
 
     // data product
     const [products, setProducts] = useState([]);
@@ -65,11 +91,11 @@ const ProductPage = () => {
         await Api.get('/product')
             .then((response) => {
                 setProducts(response.data);
-                // console.log(response.data);
-            }) .catch((error) => {
+                console.log(response.data);
+            }).catch((error) => {
                 console.error("Error fetching products:", error);
             }
-        );
+            );
     };
 
     useEffect(() => {
@@ -79,7 +105,7 @@ const ProductPage = () => {
 
     return (
         <>
-            <NavbarComponent isLoggedIn={true}/>
+            <NavbarComponent isLoggedIn={true} />
 
             <section className="product mt-3">
                 <Container>
@@ -120,12 +146,12 @@ const ProductPage = () => {
                 </Container>
             </section>
 
-            <FooterComponent/>
+            <FooterComponent />
 
             {/* modal pop up */}
             <Modal show={showModal} onHide={handleCloseModal} centered>
                 <Modal.Header closeButton>
-                        <Modal.Title>{selectedProduct?.title}</Modal.Title>
+                    <Modal.Title>{selectedProduct?.title}</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>
@@ -167,21 +193,21 @@ const ProductPage = () => {
                 </Modal.Body>
 
                 <Modal.Footer className='d-flex justify-content-between'>
-                        <Form className="w-100">
-                            <Row className="d-flex align-items-center">
-                                <Col lg={6}>
-                                    <Form.Group>
-                                        <Form.Label>Jumlah/kg</Form.Label>
-                                        <small className='mx-3 text-muted'><i>*Maks. 10kg</i></small>
-                                        <Form.Control  type='number' name='jumlah' max={10} min={1} onChange={handleJumlahChange} value={jumlah} />
-                                    </Form.Group>
-                                </Col>
+                    <Form className="w-100">
+                        <Row className="d-flex align-items-center">
+                            <Col lg={6}>
+                                <Form.Group>
+                                    <Form.Label>Jumlah/kg</Form.Label>
+                                    <small className='mx-3 text-muted'><i>*Maks. 10kg</i></small>
+                                    <Form.Control type='number' name='jumlah' max={10} min={1} onChange={handleJumlahChange} value={jumlah} />
+                                </Form.Group>
+                            </Col>
 
-                                <Col lg={6} className='d-flex justify-content-end'>
-                                    <Button type='submit' variant='success' onClick={handleSubmit}>+Keranjang</Button>
-                                </Col>
-                            </Row>
-                        </Form>
+                            <Col lg={6} className='d-flex justify-content-end'>
+                                <Button type='submit' variant='success' onClick={handleSubmit}>+Keranjang</Button>
+                            </Col>
+                        </Row>
+                    </Form>
                 </Modal.Footer>
             </Modal>
         </>

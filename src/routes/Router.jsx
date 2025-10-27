@@ -1,4 +1,4 @@
-import {Routes, Route} from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 // pages
 import LandingPage from '../pages/Customer/LandingPage';
@@ -24,6 +24,7 @@ import PrivateCustomerRoutes from './PrivateCustomerRoutes';
 import IndexProduct from '../pages/admin/product/IndexProduct';
 import CreateProduct from '../pages/admin/product/CreateProduct';
 import EditProduct from '../pages/admin/product/EditProduct';
+import OrderPageAdmin from '../pages/admin/order/OrderPageAdmin';
 
 function Router() {
   return (
@@ -32,7 +33,7 @@ function Router() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        
+
         {/* customer routes */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/product" element={<ProductPage />} />
@@ -87,12 +88,18 @@ function Router() {
           </PrivateAdminRoutes>
         } />
 
+        <Route path="/admin/order" element={
+          <PrivateAdminRoutes>
+            <OrderPageAdmin />
+          </PrivateAdminRoutes>
+        } />
+
         {/* template route */}
         <Route path="/admin/template" element={<TemplateIndex />} />
         <Route path="/admin/template/create" element={<TemplateCreate />} />
         <Route path="/admin/template/edit" element={<TemplateEdit />} />
 
-        
+
       </Routes>
     </>
   )
